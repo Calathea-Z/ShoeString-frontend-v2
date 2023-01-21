@@ -11,7 +11,9 @@ const SinglePost = ({ username, _id, img, profile_img,  location, body, tags, li
         <p className='flex-1 font-bold'>{username}</p>
         <BiDotsHorizontalRounded className='h5' />
     </div>
-        
+{/*----------Post Image Section */}
+    <img src={img} alt='' className='object-cover w-full' />
+{/*----------Post Middle Section (Buttons)*/}
 </div>
   )
 }
