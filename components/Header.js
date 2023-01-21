@@ -14,7 +14,7 @@ function Header() {
 
   return (
 
-<div>
+<div className='shadow-sm border-b bg-white sticky top-0 z-50'>
 {/* -----------Header Left */}
                         {/* Logo for Small Screens */}
     <div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
