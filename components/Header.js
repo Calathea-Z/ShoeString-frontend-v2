@@ -7,13 +7,16 @@ import ProfilePic from '../assets/profile2.png';
 import { SlMenu } from 'react-icons/sl';
 import { MdOutlineEmail} from 'react-icons/md';
 import { SlPeople } from 'react-icons/sl';
+import { BsPlusCircle } from 'react-icons/bs';
+import { useRecoilState } from 'recoil';
+import { modalState } from '../atoms/modalAtom';
 
 
 
 function Header() {
+    const [open, setOpen] = useRecoilState(modalState);
 
-  return (
-
+    return (
 <div className='shadow-sm border-b bg-white sticky top-0 z-50'>
 {/* -----------Header Left */}
                         {/* Logo for Small Screens */}
@@ -41,6 +44,7 @@ function Header() {
         <div className='flex items-center justify-end space-x-4'>
         <AiFillHome className='navBtn' />
         <SlMenu className='h-6 md:hidden' />
+        <BsPlusCircle className='navBtn' onClick={() => setOpen(true)} />
         <MdOutlineEmail className='navBtn' />
         <SlPeople className='navBtn' />
         <Image src={ProfilePic} alt='profile' className='h-10 w-10 rounded-full cursor-pointer' />
