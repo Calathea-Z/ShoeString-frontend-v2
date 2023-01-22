@@ -1,4 +1,6 @@
 import AllPosts from './AllPosts';
+import MapBox from './MapBox';
+import MiniProfile from './MiniProfile';
 
 function Feed() {
   return (
@@ -7,8 +9,11 @@ function Feed() {
             <AllPosts />
         </section>
 
-        <section>
-
+        <section className='hidden xl:inline-grid md:col-span-1'>
+            <div className='fixed top-20'>
+                <MiniProfile />
+                <MapBox />
+            </div>
         </section>
     </main>
   )
