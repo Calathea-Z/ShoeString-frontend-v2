@@ -14,7 +14,7 @@ function MapBox() {
 return(
     <div className='ml-4 mt-8 rounded-md border-2 border-gray-200'>
         <GoogleMap center={center} zoom={12} 
-        mapContainerStyle={{ width: '100%', height: '800px'}}
+        mapContainerStyle={{ width: '120%', height: '420px'}}
         >
             <Marker position={center} />
         </GoogleMap>

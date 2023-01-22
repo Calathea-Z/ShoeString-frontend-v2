@@ -8,7 +8,7 @@ function MiniProfile() {
         <Image src={Profile} alt='' className='rounded-full border p-[2px] w-16 h-16'/>
         <div className='flex-1 mx-4'>
             <h2 className='font-bold'>Zach</h2>
-            <h3 className='text-sm text-gray-400'>Thanks for choosing Shoestring</h3>
+            <h3 className='text-sm text-gray-400'>Where in the world?</h3>
         </div>
         <button className='text-sky-300 text-sm'>Sign Out</button>
     </div>
