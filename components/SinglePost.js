@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
-import { ImHeart } from "react-icons/im"
+import { AiOutlineHeart } from "react-icons/ai"
 import { FaMapMarkerAlt } from "react-icons/fa"
 
 const SinglePost = ({ username, _id, img, profile_img,  location, body, tags, likes }) => {
@@ -16,13 +16,20 @@ const SinglePost = ({ username, _id, img, profile_img,  location, body, tags, li
 {/*----------Post Image Section */}
     <img src={img} alt='' className='object-cover w-full' />
 {/*----------Post Middle Section (Buttons)*/}
-    <div>
-        <FaMapMarkerAlt className='btn' />
-        <p>{location}</p>
-        <p>{likes}</p>
-        <ImHeart className="btn" />
-        
+    <div className='flex space-x-4 justify-between px-4 pt-4'>
+        <div className='flex space-x-3 content-center'>
+            <FaMapMarkerAlt className='btn  text-sky-300' />
+            <p className='font-semibold'>{location}</p>
+        </div>
+
+        <div className='flex space-x-2 content-center'>
+            <p className='font-semibold'>{likes}</p>
+            <AiOutlineHeart className="btn" />
+        </div> 
     </div>
+{/*----------Post Caption Area*/}
+    <p className='p-5 truncate'><span className='font-bold m-1'>{username}</span>
+    {body}</p>
 </div>
   )
 }
