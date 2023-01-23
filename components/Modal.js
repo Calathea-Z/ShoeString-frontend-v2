@@ -11,29 +11,6 @@ const Modal = () => {
     const filePickerRef = useRef(null);
     const [selectedFile, setSelectedFile] = useState(null);
 
-    // const uploadImage = async (e) => {
-    //     e.preventDefault()
-    //     const data = new FormData()
-    //     data.append("file", image)
-    //     data.append("upload_preset", "shoe_string")
-    //     data.append("cloud_name", "dcqoiu7bp")
-  
-    //     fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
-    //         method: "POST",
-    //         body: data,
-    //     })
-    //         .then((res) => res.json())
-    //         .then((data) => {
-    //             console.log(data)
-    //             const imgUrl = { ...newForm, img: data.url }
-    //             setNewForm(imgUrl)
-    //             console.log(newForm)
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //         })
-    // }
-
     const addImageToPost = (e) => {
         const reader = new FileReader();
         if(e.target.files[0]) {
@@ -59,7 +36,7 @@ const Modal = () => {
                     <div className='inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6'>
                         <div>
                             {selectedFile ? (
-                                <Image src={selectedFile} alt='' onClick={()=> setSelectedFile(null)} className='w-full object-contain cursor-pointer' />
+                                <img src={selectedFile} alt='' onClick={()=> setSelectedFile(null)} className='w-full object-contain cursor-pointer' />
                             ) : (
                             <div 
                             onClick={()=> filePickerRef.current.click()}
