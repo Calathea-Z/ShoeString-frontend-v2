@@ -4,12 +4,57 @@ import { modalState } from '../atoms/modalAtom'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react';
 import { FaCameraRetro } from 'react-icons/fa';
-import Image from 'next/image'
    
 const Modal = () => {
     const [open, setOpen] = useRecoilState(modalState);
     const filePickerRef = useRef(null);
+    // const captionRef = useRef(null);
+    // const latRef = useRef(null);
+    // const longRef = useRef(null);
+    const [fullPostData, setFullPostData] = useState({
+        username: '',
+        body: '',
+        tags: '',
+        img: '',
+        long: null,
+        lat: null,
+        likes: null,
+    })
     const [selectedFile, setSelectedFile] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const uploadPost = async (e) => {
+        e.preventDefault()
+        // if(loading) return;
+        // setLoading(true);
+        const data = new FormData()
+        data.append("file", selectedFile)
+        data.append("upload_preset", "shoe_string")
+        data.append("cloud_name", "dcqoiu7bp")
+
+        fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
+        method: "POST",
+        body: data,
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data)
+            const imgUrl = { ...fullPostData, img: data.url }
+            setFullPostData(imgUrl)
+            console.log(fullPostData)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+    const handleChange = (e) => {
+        console.log(fullPostData)
+        const userInput = {...fullPostData}
+        userInput[e.target.name] = e.target.value
+        console.log(userInput)
+        setSelectedFile(userInput)
+    }
 
     const addImageToPost = (e) => {
         const reader = new FileReader();
@@ -20,7 +65,7 @@ const Modal = () => {
             setSelectedFile(readerEvent.target.result);
         };
     };
-  return (
+return (
     <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='fixed z-10 inset-0 overflow-y-auto' onClose={setOpen}>
             <div className='flex items-end justify-center min-h-[800px] sm:min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
@@ -61,15 +106,41 @@ const Modal = () => {
 
                                 <div className='mt-2'>
                                     <input className='border-none focus: ring-0 w-full text-center' type='text'
-                                    //ref={captionRef}
-                                    placeholder='Jot down your thoughts'
+                                    // ref={captionRef}
+                                    placeholder='...your thoughts go here'
+                                    value={fullPostData.body}
+                                    onChange={handleChange}
                                     />
+                                </div>
+                                <div className='flex'>
+                                    <div className='mt-2'>
+                                        <input className='border-none focus: ring-0 w-full text-center' type='number'
+                                        // ref={latRef}
+                                        id='lat'
+                                        name='lat'
+                                        placeholder='latitude'
+                                        value={fullPostData.lat}
+                                        onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    <div className='mt-2'>
+                                        <input className='border-none focus: ring-0 w-full text-center' type='number'
+                                        // ref={longRef}
+                                        id='long'
+                                        name='long'
+                                        placeholder='longitude'
+                                        value={fullPostData.long}
+                                        onChange={handleChange}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div className='mt-5 sm:mt-6'>
                             <button type='button' className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled-bg-gray-300'
+                            onClick={uploadPost}
                             >
                                 Add A Post
                             </button>
@@ -81,7 +152,7 @@ const Modal = () => {
             </div>
         </Dialog>
     </Transition.Root>
-  )
+)
 }
 
 export default Modal
