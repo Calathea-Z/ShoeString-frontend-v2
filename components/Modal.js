@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { modalState } from '../atoms/modalAtom'
 import { Dialog, Transition } from '@headlessui/react'
@@ -8,23 +8,20 @@ import { FaCameraRetro } from 'react-icons/fa';
 const Modal = () => {
     const [open, setOpen] = useRecoilState(modalState);
     const filePickerRef = useRef(null);
-    const captionRef = useRef(null);
+    const bodyRef = useRef(null);
     const latRef = useRef(null);
     const longRef = useRef(null);
-    const [fullPostData, setFullPostData] = useState({
-        username: '',
-        body: '',
-        tags: '',
-        img: '',
-        long: '',
-        lat: '',
-        likes: '',
-    })
     const [selectedFile, setSelectedFile] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [imgUrl, setImgUrl] = useState(null)
 
-    const uploadPost = async (e) => {
-        e.preventDefault()
+    
+    
+    const uploadPost = async () => {
+        setOpen(false);
+        // if(loading) return;
+        // setLoading(true);
+
         const data = new FormData()
         data.append("file", selectedFile)
         data.append("upload_preset", "shoe_string")
@@ -37,20 +34,11 @@ const Modal = () => {
             });
             const json = await res.json();
             console.log(json);
-            setFullPostData({ ...fullPostData, img: json.url });
-            console.log(fullPostData);
+            setImgUrl(json.url);
         } catch (err) {
             console.log(err);
         }
-    }
-
-    const handleChange = (e) => {
-        console.log(fullPostData)
-        const userInput = {...fullPostData}
-        userInput[e.target.name] = e.target.value
-        console.log(userInput)
-        setSelectedFile(userInput)
-    }
+    };
 
     const addImageToPost = (e) => {
         const reader = new FileReader();
@@ -60,7 +48,9 @@ const Modal = () => {
         reader.onload = (readerEvent) => {
             setSelectedFile(readerEvent.target.result);
         };
+        
     };
+
 return (
     <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='fixed z-10 inset-0 overflow-y-auto' onClose={setOpen}>
@@ -86,7 +76,12 @@ return (
                                 <FaCameraRetro className='h-6 w-6 text-purple-600' aria-hidden='true'/>
                             </div>
                             )}
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            uploadPost();
+                        }}>  
                         <div>
+                            
                             <div className='mt-3 text-center sm:mt-5'>
                                 <Dialog.Title as='h3' className='text-lg leading-6 font-medium text-gray-900'>
                                     Upload A Photo
@@ -102,9 +97,8 @@ return (
 
                                 <div className='mt-2'>
                                     <input className='border-none focus: ring-0 w-full text-center' type='text'
-                                    ref={captionRef}
+                                    ref={bodyRef}
                                     placeholder='...your thoughts go here'
-                                    onChange={handleChange}
                                     />
                                 </div>
                                 <div className='flex'>
@@ -114,7 +108,6 @@ return (
                                         id='lat'
                                         name='lat'
                                         placeholder='latitude'  
-                                        onChange={handleChange}
                                         />
                                     </div>
 
@@ -124,7 +117,6 @@ return (
                                         id='long'
                                         name='long'
                                         placeholder='longitude'
-                                        onChange={handleChange}
                                         />
                                     </div>
                                 </div>
@@ -132,13 +124,12 @@ return (
                         </div>
 
                         <div className='mt-5 sm:mt-6'>
-                            <button type='button' className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled-bg-gray-300'
-                            onClick={uploadPost}
+                            <button type='submit' className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled-bg-gray-300'
                             >
                                 Add A Post
-                            </button>
+                            </button>            
                         </div>
-
+                        </form>
                     </div>
                 </div>
                 </Transition.Child>
