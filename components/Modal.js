@@ -4,7 +4,7 @@ import { modalState } from '../atoms/modalAtom'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react';
 import { FaCameraRetro } from 'react-icons/fa';
-   
+
 const Modal = () => {
     const [open, setOpen] = useRecoilState(modalState);
     const filePickerRef = useRef(null);
@@ -25,28 +25,24 @@ const Modal = () => {
 
     const uploadPost = async (e) => {
         e.preventDefault()
-        // if(loading) return;
-        // setLoading(true);
         const data = new FormData()
         data.append("file", selectedFile)
         data.append("upload_preset", "shoe_string")
         data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
-
-        fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
-        method: "POST",
-        body: data,
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data)
-            const imgUrl = { ...fullPostData, img: data.url }
-            setFullPostData(imgUrl)
-            console.log(fullPostData)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-}
+    
+        try {
+            const res = await fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
+                method: "POST",
+                body: data,
+            });
+            const json = await res.json();
+            console.log(json);
+            setFullPostData({ ...fullPostData, img: json.url });
+            console.log(fullPostData);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const handleChange = (e) => {
         console.log(fullPostData)
