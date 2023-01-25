@@ -30,7 +30,7 @@ const Modal = () => {
         const data = new FormData()
         data.append("file", selectedFile)
         data.append("upload_preset", "shoe_string")
-        data.append("cloud_name", "dcqoiu7bp")
+        data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
 
         fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
         method: "POST",
