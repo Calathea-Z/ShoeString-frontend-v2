@@ -8,17 +8,17 @@ import { FaCameraRetro } from 'react-icons/fa';
 const Modal = () => {
     const [open, setOpen] = useRecoilState(modalState);
     const filePickerRef = useRef(null);
-    // const captionRef = useRef(null);
-    // const latRef = useRef(null);
-    // const longRef = useRef(null);
+    const captionRef = useRef(null);
+    const latRef = useRef(null);
+    const longRef = useRef(null);
     const [fullPostData, setFullPostData] = useState({
         username: '',
         body: '',
         tags: '',
         img: '',
-        long: null,
-        lat: null,
-        likes: null,
+        long: '',
+        lat: '',
+        likes: '',
     })
     const [selectedFile, setSelectedFile] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -102,31 +102,28 @@ return (
 
                                 <div className='mt-2'>
                                     <input className='border-none focus: ring-0 w-full text-center' type='text'
-                                    // ref={captionRef}
+                                    ref={captionRef}
                                     placeholder='...your thoughts go here'
-                                    value={fullPostData.body}
                                     onChange={handleChange}
                                     />
                                 </div>
                                 <div className='flex'>
                                     <div className='mt-2'>
                                         <input className='border-none focus: ring-0 w-full text-center' type='number'
-                                        // ref={latRef}
+                                        ref={latRef}
                                         id='lat'
                                         name='lat'
-                                        placeholder='latitude'
-                                        value={fullPostData.lat}
+                                        placeholder='latitude'  
                                         onChange={handleChange}
                                         />
                                     </div>
 
                                     <div className='mt-2'>
                                         <input className='border-none focus: ring-0 w-full text-center' type='number'
-                                        // ref={longRef}
+                                        ref={longRef}
                                         id='long'
                                         name='long'
                                         placeholder='longitude'
-                                        value={fullPostData.long}
                                         onChange={handleChange}
                                         />
                                     </div>

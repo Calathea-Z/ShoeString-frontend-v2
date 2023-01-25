@@ -25,10 +25,10 @@ const AllPosts = () => {
 
   return (
 <div>
-  {post.allPosts?.map((post) => {
+  {post.allPosts?.map((post, index) => {
     return(
       <div>
-        <SinglePost key={post.id} username={post.username} _id={post._id} body={post.body} likes={post.likes} img={post.img} profile_img={post.profile_img} location={post.location}/>
+        <SinglePost key={index} username={post.username} _id={post._id} body={post.body} likes={post.likes} img={post.img} profile_img={post.profile_img} location={post.location}/>
       </div>
       )
   })}
