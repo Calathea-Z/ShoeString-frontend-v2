@@ -5,7 +5,7 @@ import { FaMapMarkerAlt } from "react-icons/fa"
 import { BsEmojiSunglasses } from 'react-icons/bs'
 
 const SinglePost = ({ username, _id, img, profile_img,  location, body, tags, likes }) => {
- 
+    
   return (
 <div className='bg-white my-7 border rounded-sm'>
 {/*----------Post Header*/}
