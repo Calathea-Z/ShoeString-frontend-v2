@@ -8,19 +8,46 @@ import { FaCameraRetro } from 'react-icons/fa';
 const Modal = () => {
     const [open, setOpen] = useRecoilState(modalState);
     const filePickerRef = useRef(null);
-    const bodyRef = useRef(null);
-    const latRef = useRef(null);
-    const longRef = useRef(null);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [imgUrl, setImgUrl] = useState(null)
+    const [imgUrl, setImgUrl] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [newForm, setNewForm] = useState({
+        username: " ",
+        body: " ",
+        tags: " ",
+        img: " ",
+        longitude: "",
+        latitude: "",
+        likes: " "
+    })
 
-    
-    
+    const uploadImage = async (e) => {
+        e.preventDefault()
+        const data = new FormData()
+        data.append("file", selectedFile)
+        data.append("upload_preset", "shoe_string")
+        data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
+  
+        fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
+            method: "POST",
+            body: data,
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data)
+                const imgUrl = { ...newForm, img: data.url }
+                setNewForm(imgUrl)
+                console.log(newForm)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+
     const uploadPost = async () => {
-        setOpen(false);
-        // if(loading) return;
-        // setLoading(true);
+        if(loading) return;
+        setLoading(true);
 
         const data = new FormData()
         data.append("file", selectedFile)
@@ -28,17 +55,52 @@ const Modal = () => {
         data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
     
         try {
-            const res = await fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
+            // const res = await fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
+            //     method: "POST",
+            //     body: data,
+            // });
+            // const json = await res.json();
+            // console.log("hit")
+            // console.log(json);
+            // if(json.url){
+            //     setImgUrl(json.url)
+            //     console.log("I am ImgURL", imgUrl)
+            //     const imgState = {...newForm, img: imgUrl}
+            //     console.log("I am imgState", imgState)
+            //     setNewForm(imgState)
+            //     setLoading(false);
+
+            const requestOptions = {
                 method: "POST",
-                body: data,
-            });
-            const json = await res.json();
-            console.log(json);
-            setImgUrl(json.url);
-        } catch (err) {
-            console.log(err);
-        }
-    };
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newForm),
+            };
+            const response = await fetch("https://shoe-string.herokuapp.com/posts", requestOptions)
+            console.log("I am before", newForm)
+            const createdPost = await response.json()
+            console.log(" I am created post", createdPost)
+            setNewForm({
+                username: " ",
+                body: " ",
+                tags: " ",
+                img: " ",
+                longitude: "",
+                latitude: "",
+                likes: " "
+            })
+            setOpen(false);
+            setSelectedFile(null);
+            setLoading(false);
+            }catch (err) {
+            console.error(`Error in Try Block of handleSubmit function: ${err}`)
+    }
+}
+
+    const handleChange = (e) => {
+        const userInput = { ...newForm }
+        userInput[e.target.name] = e.target.value
+        setNewForm(userInput)
+    }
 
     const addImageToPost = (e) => {
         const reader = new FileReader();
@@ -48,9 +110,11 @@ const Modal = () => {
         reader.onload = (readerEvent) => {
             setSelectedFile(readerEvent.target.result);
         };
-        
     };
 
+    useEffect(() => {
+        console.log(newForm)
+    },[newForm,])
 return (
     <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='fixed z-10 inset-0 overflow-y-auto' onClose={setOpen}>
@@ -79,43 +143,46 @@ return (
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             uploadPost();
-                        }}>  
+                        }}
+                        >  
                         <div>
                             
                             <div className='mt-3 text-center sm:mt-5'>
-                                <Dialog.Title as='h3' className='text-lg leading-6 font-medium text-gray-900'>
-                                    Upload A Photo
-                                </Dialog.Title>
+                                <button onClick={uploadImage} disabled={(!selectedFile)} className='text-lg rounded-md border border-transparent leading-6 font-medium shadow-sm px-4 py-2 bg-purple-600 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled-bg-gray-300'>
+                                    Submit Photo
+                                </button>
                                 <div>  
                                     <input
                                     ref={filePickerRef} 
                                     type='file' 
                                     hidden
                                     onChange={addImageToPost}
+                                    name = 'image'
                                     />
                                 </div>
 
                                 <div className='mt-2'>
                                     <input className='border-none focus: ring-0 w-full text-center' type='text'
-                                    ref={bodyRef}
+                                    name='body' value={newForm.body}
+                                    onChange={handleChange}
                                     placeholder='...your thoughts go here'
                                     />
                                 </div>
                                 <div className='flex'>
                                     <div className='mt-2'>
                                         <input className='border-none focus: ring-0 w-full text-center' type='number'
-                                        ref={latRef}
-                                        id='lat'
-                                        name='lat'
+                                        name='latitude' value={newForm.latitude}
+                                        onChange={handleChange}
+                                        id='latitude'
                                         placeholder='latitude'  
                                         />
                                     </div>
 
                                     <div className='mt-2'>
                                         <input className='border-none focus: ring-0 w-full text-center' type='number'
-                                        ref={longRef}
-                                        id='long'
-                                        name='long'
+                                        name='longitude' value={newForm.longitude}
+                                        onChange={handleChange}
+                                        id='longitude'
                                         placeholder='longitude'
                                         />
                                     </div>
@@ -124,9 +191,9 @@ return (
                         </div>
 
                         <div className='mt-5 sm:mt-6'>
-                            <button type='submit' className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled-bg-gray-300'
+                            <button type='submit' disabled={!selectedFile} onClick={uploadPost} className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled-bg-gray-300'
                             >
-                                Add A Post
+                                {loading ? "Uploading..." : "Upload Post"}
                             </button>            
                         </div>
                         </form>
