@@ -9,6 +9,7 @@ const Modal = () => {
     const [open, setOpen] = useRecoilState(modalState);
     const filePickerRef = useRef(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [imgUrl, setImgUrl] = useState(null);
     const [loading, setLoading] = useState(false);
     const [newForm, setNewForm] = useState({
         username: " ",
@@ -20,54 +21,36 @@ const Modal = () => {
         likes: " "
     })
 
-    const uploadImage = async () => {
-        // if(loading) return;
-        // setLoading(true);
-        const data = new FormData()
-        data.append("file", selectedFile)
-        data.append("upload_preset", "shoe_string")
-        data.append("cloud_name", "dcqoiu7bp")
-  
-        fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
-            method: "POST",
-            body: data,
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data)
-                // const imgUrl = { ...newForm, img: data.url }
-                setNewForm({...newForm,img: data.url})
-                console.log(newForm)
-                console.log("HIT")
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     const uploadPost = async () => {
         if(loading) return;
         setLoading(true);
 
-        // const data = new FormData()
-        // data.append("file", selectedFile)
-        // data.append("upload_preset", "shoe_string")
-        // data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
+        const data = new FormData()
+        data.append("file", selectedFile)
+        data.append("upload_preset", "shoe_string")
+        data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME)
     
-        // try {
-        //     const res = await fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
-        //         method: "POST",
-        //         body: data,
-        //     });
-        //     const json = await res.json();
-        //     console.log(json);
-        //     setImgUrl(json.url)
-        //     const imgState = {...newForm, img: imgUrl}
-        //     setNewForm(imgState)
-        //     setLoading(false);
-        // } catch (err) {
-        //     console.log(err);
-        // }
+        try {
+            const res = await fetch("https://api.cloudinary.com/v1_1/dcqoiu7bp/image/upload", {
+                method: "POST",
+                body: data,
+            });
+            const json = await res.json();
+            console.log("hit")
+            console.log(json);
+            if(json.url){
+                setImgUrl(json.url)
+                console.log("I am ImgURL", imgUrl)
+                const imgState = {...newForm, img: imgUrl}
+                console.log("I am imgState", imgState)
+                setNewForm(imgState)
+                setLoading(false);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        if(imgUrl){
         try {
             const requestOptions = {
                 method: "POST",
@@ -76,7 +59,9 @@ const Modal = () => {
             }
             const response = await fetch("https://shoe-string.herokuapp.com/posts", requestOptions)
             console.log("I am before", newForm)
-  
+            if(!response.ok){
+                throw new Error(response.statusText);
+            }
             const createdPost = await response.json()
             console.log(" I am created post", createdPost)
             setNewForm({
@@ -90,14 +75,15 @@ const Modal = () => {
             })
             setOpen(false);
             setSelectedFile(null);
+            setLoading(false);
         } catch (err) {
             console.error(`Error in Try Block of handleSubmit function: ${err}`)
         }
+    }
 
     };
 
     const handleChange = (e) => {
-        console.log(newForm)
         const userInput = { ...newForm }
         userInput[e.target.name] = e.target.value
         setNewForm(userInput)
@@ -112,6 +98,10 @@ const Modal = () => {
             setSelectedFile(readerEvent.target.result);
         };
     };
+
+    useEffect(() => {
+        console.log(newForm)
+    },[newForm,])
 return (
     <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='fixed z-10 inset-0 overflow-y-auto' onClose={setOpen}>
@@ -139,10 +129,9 @@ return (
                             )}
                         <form onSubmit={(e) => {
                             e.preventDefault();
-                            uploadImage();
                             uploadPost();
-                            
-                        }}>  
+                        }}
+                        >  
                         <div>
                             
                             <div className='mt-3 text-center sm:mt-5'>
