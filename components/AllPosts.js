@@ -24,7 +24,7 @@ const AllPosts = () => {
 
 
   return (
-<div>
+<div className='flex flex-col-reverse'>
   {post.allPosts?.map((post, index) => {
     return(
       <div>
