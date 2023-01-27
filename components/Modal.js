@@ -162,7 +162,7 @@ return (
                                 </div>
 
                                 <div className='mt-2'>
-                                    <input className='border-none focus: ring-0 w-full text-center' type='text'
+                                    <input className='border-none focus:ring-0 w-full text-center' type='text'
                                     name='body' value={newForm.body}
                                     onChange={handleChange}
                                     placeholder='...your thoughts go here'
@@ -170,7 +170,7 @@ return (
                                 </div>
                                 <div className='flex'>
                                     <div className='mt-2'>
-                                        <input className='border-none focus: ring-0 w-full text-center' type='number'
+                                        <input className='border-none focus:ring-0 w-full text-center' type='number'
                                         name='latitude' value={newForm.latitude}
                                         onChange={handleChange}
                                         id='latitude'
@@ -179,7 +179,7 @@ return (
                                     </div>
 
                                     <div className='mt-2'>
-                                        <input className='border-none focus: ring-0 w-full text-center' type='number'
+                                        <input className='border-none focus:ring-0 w-full text-center' type='number'
                                         name='longitude' value={newForm.longitude}
                                         onChange={handleChange}
                                         id='longitude'
