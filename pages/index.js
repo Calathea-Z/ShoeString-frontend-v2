@@ -5,8 +5,16 @@ import Modal from "../components/Modal"
 import { app } from "../firebase/config"
 import { getAuth } from "firebase/auth"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/router"
 
 export default function Home() {
+    const router = useRouter()
+    useEffect(() => {
+        let token = sessionStorage.getItem("token")
+        if (!token) {
+            router.push("/signin")
+        }
+    }, [])
     return (
         <div className="bg-gray-50 h-screen overflow-y-scroll scrollbar-hide">
             <Head>
