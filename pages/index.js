@@ -13,7 +13,6 @@ export default function Home() {
                 <title>ShoeString</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Header />
             <Feed />
             <Modal />
         </div>

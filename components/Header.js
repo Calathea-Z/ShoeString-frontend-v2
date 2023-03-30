@@ -15,7 +15,7 @@ import { useState, useEffect } from "react"
 import { getAuth } from "firebase/auth"
 import { useRouter } from "next/router"
 
-function Header() {
+function Header({ children }) {
     const router = useRouter()
     const [open, setOpen] = useRecoilState(modalState)
     const [userEmail, setUserEmail] = useState("")
@@ -47,7 +47,7 @@ function Header() {
             <div className="flex justify-between max-w-6xl mx-5 lg:mx-auto">
                 <div className="relative hidden lg:inline-grid w-24 cursor-pointer">
                     <Link href="/">
-                        <Image src={FullLogo} alt="Shoestring full logo" fill style={{ objectFit: "contain", width: "100%" }} />
+                        <Image src={FullLogo} alt="Shoestring full logo" className="cursor-pointer" fill style={{ objectFit: "contain", width: "100%" }} />
                     </Link>
                 </div>
                 {/* Logo for Larger Screens */}
@@ -87,6 +87,7 @@ function Header() {
                     <Image src={ProfilePic} alt="profile" className="h-10 w-10 rounded-full cursor-pointer" />
                 </div>
             </div>
+            <main>{children}</main>
         </div>
     )
 }
