@@ -5,14 +5,20 @@ import { app } from "../firebase/config"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider } from "firebase/auth"
+import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, createUserWithEmailAndPassword } from "firebase/auth"
 
-function signIn() {
+function SignIn() {
     const auth = getAuth(app)
     const googleProvider = new GoogleAuthProvider()
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    const signUp = () => {
+        createUserWithEmailAndPassword(auth, email, password)
+        console.log(res.user)
+        sessionStorage.setItem("token", res.user.accessToken)
+    }
 
     const login = () => {
         signInWithEmailAndPassword(auth, email, password)
@@ -47,10 +53,6 @@ function signIn() {
                     <Image src={FullLogo} alt="" className="w-200" />
                     <h6 className="font-semibold, text-gray-500">A Guest Book For Planet Earth</h6>
                 </div>
-                <div className="flex justify-center gap-5">
-                    <button className="p-3 bg-sky-500 rounded-lg text-white">Sign in</button>
-                    <button className="p-3 bg-sky-500 rounded-lg text-white">Register</button>
-                </div>
                 <div className="flex justify-center mt-10">
                     <div className="flex flex-col w-72 items-center gap-4">
                         <input
@@ -67,16 +69,10 @@ function signIn() {
                             value={password}
                             type="password"
                         />
-                        <button
-                            onClick={login}
-                            type="button"
-                            className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900">
+                        <button onClick={login} type="button" className=" text-white bg-sky-500 hover:bg-sky-500/80 font-medium rounded-lg text-sm px-5 py-3 mb-2">
                             Login
                         </button>
-                        <button
-                            onClick={googleSignUp}
-                            type="button"
-                            className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
+                        <button onClick={googleSignUp} type="button" className="text-white bg-[#4285F4] hover:bg-[#4285F4]/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
                             <svg className="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
                                 <path
                                     fill="currentColor"
@@ -84,6 +80,11 @@ function signIn() {
                             </svg>
                             Log in with Google
                         </button>
+                        <Link href="/register">
+                            <p>
+                                First time here? <span className=" text-sky-600 hover:text-sky-500/80">Please register.</span>
+                            </p>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -91,4 +92,4 @@ function signIn() {
     )
 }
 
-export default signIn
+export default SignIn
