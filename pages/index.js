@@ -10,11 +10,10 @@ export default function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     useEffect(() => {
         const auth = getAuth(app)
-
         const login = auth.onAuthStateChanged((user) => {
             return user ? setIsLoggedIn(true) : setIsLoggedIn(false)
         })
-        console.log({ "logged in?": isLoggedIn, user: auth.currentUser })
+        console.log({ "logged in?": isLoggedIn, user: auth.currentUser.email })
         return login
     }, [])
 

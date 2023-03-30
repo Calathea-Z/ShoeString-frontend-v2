@@ -5,7 +5,7 @@ import { app } from "../firebase/config"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, createUserWithEmailAndPassword } from "firebase/auth"
+import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider } from "firebase/auth"
 
 function SignIn() {
     const auth = getAuth(app)
@@ -13,12 +13,6 @@ function SignIn() {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
-    const signUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
-        console.log(res.user)
-        sessionStorage.setItem("token", res.user.accessToken)
-    }
 
     const login = () => {
         signInWithEmailAndPassword(auth, email, password)
