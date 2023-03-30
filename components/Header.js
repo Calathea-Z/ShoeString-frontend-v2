@@ -16,6 +16,7 @@ import { getAuth } from "firebase/auth"
 import { useRouter } from "next/router"
 
 function Header({ children }) {
+    const auth = getAuth()
     const router = useRouter()
     const [open, setOpen] = useRecoilState(modalState)
     const [userEmail, setUserEmail] = useState("")
@@ -33,11 +34,16 @@ function Header({ children }) {
         return unsubscribe
     }, [])
 
-    const logout = () => {
-        setUserEmail(null)
-        console.log("Logged out")
-        sessionStorage.removeItem("token")
-        router.push("/signin")
+    const logout = async () => {
+        try {
+            await auth.signOut()
+            setUserEmail(null)
+            console.log("Logged out")
+            sessionStorage.removeItem("token")
+            router.push("/signin")
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     return (
@@ -70,7 +76,7 @@ function Header({ children }) {
 
                 {/* -----------HeaderRight*/}
                 <div className="flex items-center justify-end space-x-4">
-                    {userEmail && (
+                    {userEmail ? (
                         <div className="flex">
                             <button onClick={logout} className=" text-white bg-purple-500 hover:bg-purple-500/80 font-medium rounded-lg text-sm px-5 py-3 mr-2 mb-2">
                                 Log Out
@@ -78,6 +84,10 @@ function Header({ children }) {
 
                             <p className="text-gray-500 text-sm font-medium">{userEmail}</p>
                         </div>
+                    ) : (
+                        <Link href="/signin">
+                            <button className=" text-white bg-purple-500 hover:bg-purple-500/80 font-medium rounded-lg text-sm px-5 py-3 mr-2 mb-2">Sign In</button>{" "}
+                        </Link>
                     )}
                     <AiFillHome className="navBtn" />
                     <SlMenu className="h-6 md:hidden" />
