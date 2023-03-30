@@ -11,9 +11,34 @@ import { BsPlusCircle } from "react-icons/bs"
 import { useRecoilState } from "recoil"
 import { modalState } from "../atoms/modalAtom"
 import Link from "next/link"
+import { useState, useEffect } from "react"
+import { getAuth } from "firebase/auth"
+import { useRouter } from "next/router"
 
 function Header() {
+    const router = useRouter()
     const [open, setOpen] = useRecoilState(modalState)
+    const [userEmail, setUserEmail] = useState("")
+    useEffect(() => {
+        const auth = getAuth()
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("Logged in as:", user.email)
+                setUserEmail(user.email)
+            } else {
+                setUserEmail(null)
+                console.log("Not logged in")
+            }
+        })
+        return unsubscribe
+    }, [])
+
+    const logout = () => {
+        setUserEmail(null)
+        console.log("Logged out")
+        sessionStorage.removeItem("token")
+        router.push("/signin")
+    }
 
     return (
         <div className="shadow-sm border-b bg-white sticky top-0 z-50">
@@ -45,6 +70,15 @@ function Header() {
 
                 {/* -----------HeaderRight*/}
                 <div className="flex items-center justify-end space-x-4">
+                    {userEmail && (
+                        <div className="flex">
+                            <button onClick={logout} className=" text-white bg-purple-500 hover:bg-purple-500/80 font-medium rounded-lg text-sm px-5 py-3 mr-2 mb-2">
+                                Log Out
+                            </button>
+
+                            <p className="text-gray-500 text-sm font-medium">{userEmail}</p>
+                        </div>
+                    )}
                     <AiFillHome className="navBtn" />
                     <SlMenu className="h-6 md:hidden" />
                     <BsPlusCircle className="navBtn" onClick={() => setOpen(true)} />
