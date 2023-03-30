@@ -8,7 +8,6 @@ import { useState, useEffect } from "react"
 
 export default function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
-    console.log(process.env.FIREBASE_API_KEY)
     useEffect(() => {
         const auth = getAuth(app)
 
