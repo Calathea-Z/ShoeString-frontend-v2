@@ -12,7 +12,6 @@ const AllPosts = () => {
             const response = await fetch(dbLocalHost)
             const allPosts = await response.json()
             setPost(allPosts)
-            console.log(allPosts)
         } catch (err) {
             console.log(err)
         }
