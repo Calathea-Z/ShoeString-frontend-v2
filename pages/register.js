@@ -14,23 +14,38 @@ const Register = () => {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [errorMsg, setErrorMsg] = useState(null)
 
-    const signUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
-        console.log(res.user)
-        sessionStorage.setItem("token", res.user.accessToken)
-    }
-
-    const googleSignUp = () => {
-        signInWithPopup(auth, googleProvider).then((res) => {
+    const signUp = async () => {
+        try {
+            const res = await createUserWithEmailAndPassword(auth, email, password)
             console.log(res.user)
             sessionStorage.setItem("token", res.user.accessToken)
-            router.push("/")
-        })
+        } catch (err) {
+            console.error(err)
+            if (err.code === "auth/email-already-in-use") {
+                setErrorMsg("This email is already in use. Please try another one.")
+            } else {
+                setErrorMsg("An error occurred.")
+            }
+        }
     }
+
+    const googleSignUp = async () => {
+        try {
+            await signInWithPopup(auth, googleProvider).then((res) => {
+                console.log(res.user)
+                sessionStorage.setItem("token", res.user.accessToken)
+                router.push("/")
+            })
+        } catch (err) {
+            console.error(err)
+            setErrorMsg(err.message)
+        }
+    }
+
     return (
         <>
-            
             <div className="min-h-screen w-screen">
                 <div className="flex flex-col items-center justify-center p-4 mb-10 text-center">
                     <Image src={FullLogo} alt="" className="w-200" />
@@ -38,6 +53,7 @@ const Register = () => {
                 </div>
                 <div className="flex justify-center mt-10">
                     <div className="flex flex-col w-72 items-center gap-4">
+                        {errorMsg && <p className="text-red-500">{errorMsg}</p>}
                         <input
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="email"
@@ -55,7 +71,7 @@ const Register = () => {
                         <button onClick={signUp} type="button" className=" text-white bg-sky-500 hover:bg-sky-500/80 font-medium rounded-lg text-sm px-5 py-3 mb-2">
                             Register
                         </button>
-                        <button onClick={googleSignUp} type="button" className="text-white bg-[#4285F4] hover:bg-[#4285F4]/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
+                        <button onClick={googleSignUp} type="button" className="text-white bg-[#4285F4] hover:bg-[#4285F4]/80 font-medium rounded-lg text-sm px-5 py-3 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mb-2">
                             <svg className="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
                                 <path
                                     fill="currentColor"

@@ -5,7 +5,7 @@ import { app } from "../firebase/config"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider } from "firebase/auth"
+import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail } from "firebase/auth"
 
 function SignIn() {
     const auth = getAuth(app)
@@ -13,17 +13,22 @@ function SignIn() {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [errorMsg, setErrorMsg] = useState(null)
 
-    const login = () => {
-        signInWithEmailAndPassword(auth, email, password)
-            .then(() => {
-                console.log(res.user)
-                sessionStorage.setItem("token", res.user.accessToken)
-                router.push("/")
-            })
-            .catch((err) => {
-                console.error(err)
-            })
+    const login = async () => {
+        try {
+            const res = await signInWithEmailAndPassword(auth, email, password)
+            console.log(res.user)
+            sessionStorage.setItem("token", res.user.accessToken)
+            router.push("/")
+        } catch (err) {
+            console.error(err)
+            if (err.code === "auth/wrong-password") {
+                setErrorMsg("Wrong password. Please try again.")
+            } else {
+                setErrorMsg("An error occurred.")
+            }
+        }
     }
     const googleSignUp = () => {
         signInWithPopup(auth, googleProvider).then((res) => {
@@ -32,6 +37,7 @@ function SignIn() {
             router.push("/")
         })
     }
+    
     useEffect(() => {
         let token = sessionStorage.getItem("token")
         if (token) {
@@ -48,6 +54,12 @@ function SignIn() {
                 </div>
                 <div className="flex justify-center mt-10">
                     <div className="flex flex-col w-72 items-center gap-4">
+                        {/* ERROR MESSAGE, if it exists */}
+                        {errorMsg && (
+                            <div>
+                                <p className="text-red-500">{errorMsg}</p>
+                            </div>
+                        )}
                         <input
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="email"
@@ -73,6 +85,9 @@ function SignIn() {
                             </svg>
                             Log in with Google
                         </button>
+                        <Link href="password-reset">
+                            <p className="hover:cursor-pointer text-sky-600 hover:text-sky-500/80">Forgot your password?</p>
+                        </Link>
                         <Link href="/register">
                             <p>
                                 First time here? <span className=" text-sky-600 hover:text-sky-500/80">Please register.</span>
