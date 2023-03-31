@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
-import { app } from "../firebase/config"
-import { getAuth, sendPasswordResetEmail } from "firebase/auth"
+import { auth, app } from "../firebase/config"
+import { sendPasswordResetEmail } from "firebase/auth"
 
 const passwordReset = () => {
-    const auth = getAuth(app)
+    const router = useRouter()
     const [errorMsg, setErrorMsg] = useState(null)
     const [email, setEmail] = useState("")
 
     const resetPassword = async (email) => {
         try {
-            const res = await auth.sendPasswordResetEmail(email)
-            console.log(res)
+            await sendPasswordResetEmail(auth, email)
             console.log("Password reset email sent")
+            setErrorMsg("Password reset email sent. Please check your email.")
         } catch (err) {
             console.error(err)
+            setErrorMsg(err.message)
         }
     }
     return (

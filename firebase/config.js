@@ -1,4 +1,5 @@
 import { initializeApp, getApp, getApps } from "firebase/app"
+import { getAuth } from "firebase/auth"
 
 const config = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -9,3 +10,4 @@ const config = {
 }
 
 export const app = !getApps().length ? initializeApp(config) : getApp()
+export const auth = getAuth(app)
