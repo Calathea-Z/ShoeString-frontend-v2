@@ -30,7 +30,6 @@ const Register = () => {
     }
     return (
         <>
-            
             <div className="min-h-screen w-screen">
                 <div className="flex flex-col items-center justify-center p-4 mb-10 text-center">
                     <Image src={FullLogo} alt="" className="w-200" />
@@ -55,7 +54,7 @@ const Register = () => {
                         <button onClick={signUp} type="button" className=" text-white bg-sky-500 hover:bg-sky-500/80 font-medium rounded-lg text-sm px-5 py-3 mb-2">
                             Register
                         </button>
-                        <button onClick={googleSignUp} type="button" className="text-white bg-[#4285F4] hover:bg-[#4285F4]/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
+                        <button onClick={googleSignUp} type="button" className="text-white bg-[#4285F4] hover:bg-[#4285F4]/80 font-medium rounded-lg text-sm px-5 py-3 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mb-2">
                             <svg className="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
                                 <path
                                     fill="currentColor"
