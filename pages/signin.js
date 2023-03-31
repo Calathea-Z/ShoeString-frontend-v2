@@ -1,20 +1,19 @@
-import Header from "../components/Header"
 import Image from "next/image"
 import FullLogo from "../assets/full_logo.png"
-import { app } from "../firebase/config"
+import { auth } from "../firebase/config"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail } from "firebase/auth"
+import { signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider } from "firebase/auth"
 
 function SignIn() {
-    const auth = getAuth(app)
     const googleProvider = new GoogleAuthProvider()
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errorMsg, setErrorMsg] = useState(null)
 
+    // function to handle email and password sign in
     const login = async () => {
         try {
             const res = await signInWithEmailAndPassword(auth, email, password)
@@ -30,6 +29,8 @@ function SignIn() {
             }
         }
     }
+
+    // function to handle google sign in
     const googleSignUp = () => {
         signInWithPopup(auth, googleProvider).then((res) => {
             console.log(res.user)
@@ -37,7 +38,8 @@ function SignIn() {
             router.push("/")
         })
     }
-    
+
+    // if user is already logged in, redirect to home page
     useEffect(() => {
         let token = sessionStorage.getItem("token")
         if (token) {
@@ -54,7 +56,7 @@ function SignIn() {
                 </div>
                 <div className="flex justify-center mt-10">
                     <div className="flex flex-col w-72 items-center gap-4">
-                        {/* ERROR MESSAGE, if it exists */}
+                        {/* display ERROR MESSAGE above form input fields, if error exists */}
                         {errorMsg && (
                             <div>
                                 <p className="text-red-500">{errorMsg}</p>
