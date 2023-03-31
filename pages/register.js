@@ -14,20 +14,36 @@ const Register = () => {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [errorMsg, setErrorMsg] = useState(null)
 
-    const signUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
-        console.log(res.user)
-        sessionStorage.setItem("token", res.user.accessToken)
-    }
-
-    const googleSignUp = () => {
-        signInWithPopup(auth, googleProvider).then((res) => {
+    const signUp = async () => {
+        try {
+            const res = await createUserWithEmailAndPassword(auth, email, password)
             console.log(res.user)
             sessionStorage.setItem("token", res.user.accessToken)
-            router.push("/")
-        })
+        } catch (err) {
+            console.error(err)
+            if (err.code === "auth/email-already-in-use") {
+                setErrorMsg("This email is already in use. Please try another one.")
+            } else {
+                setErrorMsg("An error occurred.")
+            }
+        }
     }
+
+    const googleSignUp = async () => {
+        try {
+            await signInWithPopup(auth, googleProvider).then((res) => {
+                console.log(res.user)
+                sessionStorage.setItem("token", res.user.accessToken)
+                router.push("/")
+            })
+        } catch (err) {
+            console.error(err)
+            setErrorMsg(err.message)
+        }
+    }
+
     return (
         <>
             <div className="min-h-screen w-screen">
@@ -37,6 +53,7 @@ const Register = () => {
                 </div>
                 <div className="flex justify-center mt-10">
                     <div className="flex flex-col w-72 items-center gap-4">
+                        {errorMsg && <p className="text-red-500">{errorMsg}</p>}
                         <input
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="email"
