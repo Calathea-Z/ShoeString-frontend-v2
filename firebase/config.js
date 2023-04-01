@@ -9,5 +9,6 @@ const config = {
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
 }
 
-export const app = !getApps().length ? initializeApp(config) : getApp()
-export const auth = getAuth(app)
+const app = !getApps().length ? initializeApp(config) : getApp()
+const auth = getAuth(app)
+export { auth, app }

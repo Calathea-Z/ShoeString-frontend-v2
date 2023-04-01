@@ -53,7 +53,7 @@ function Header({ children }) {
             <div className="flex justify-between max-w-6xl mx-5 lg:mx-auto">
                 <div className="relative hidden lg:inline-grid w-24 cursor-pointer">
                     <Link href="/">
-                        <Image src={FullLogo} alt="Shoestring full logo" className="cursor-pointer" fill style={{ objectFit: "contain", width: "100%" }} />
+                        <Image src={FullLogo} alt="Shoestring full logo" className="cursor-pointer" fill sizes="(max-width: 768px)" style={{ objectFit: "contain", width: "100%" }} />
                     </Link>
                 </div>
                 {/* Logo for Larger Screens */}
