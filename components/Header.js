@@ -12,16 +12,14 @@ import { useRecoilState } from "recoil"
 import { modalState } from "../atoms/modalAtom"
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { getAuth } from "firebase/auth"
+import { auth } from "../firebase/config"
 import { useRouter } from "next/router"
 
 function Header({ children }) {
-    const auth = getAuth()
     const router = useRouter()
     const [open, setOpen] = useRecoilState(modalState)
     const [userEmail, setUserEmail] = useState("")
     useEffect(() => {
-        const auth = getAuth()
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 console.log("Logged in as:", user.email)

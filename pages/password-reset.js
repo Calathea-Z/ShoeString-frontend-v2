@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
-import { auth } from "../firebase/config"
+import { app, auth } from "../firebase/config"
 import { sendPasswordResetEmail } from "firebase/auth"
 
 const passwordReset = () => {
@@ -18,6 +18,7 @@ const passwordReset = () => {
         } catch (err) {
             console.error(err)
             setErrorMsg(err.message)
+            console.error(err.message)
         }
     }
     return (
