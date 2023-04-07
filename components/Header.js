@@ -74,6 +74,8 @@ function Header({ children }) {
 
                 {/* -----------HeaderRight*/}
                 <div className="flex items-center justify-end space-x-4">
+                    {/* display if there is a user logged in */}
+                    {/* needs to be styled */}
                     {userEmail ? (
                         <div className="flex">
                             <button onClick={logout} className=" text-white bg-purple-500 hover:bg-purple-500/80 font-medium rounded-lg text-sm px-5 py-3 mr-2 mb-2">
