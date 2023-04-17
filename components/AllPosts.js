@@ -9,14 +9,19 @@ const AllPosts = () => {
     const getPosts = async () => {
         try {
             //Get data from BE
-            const response = await fetch(dbLocalHost)
+            const currentToken = sessionStorage.getItem("token")
+            const response = await fetch(dbLocalHost, {
+                headers: {
+                    Authorization: `Bearer ${currentToken}`,
+                },
+            })
             const allPosts = await response.json()
             setPost(allPosts)
         } catch (err) {
             console.log(err)
         }
     }
-
+    
     useEffect(() => {
         getPosts()
     }, [])

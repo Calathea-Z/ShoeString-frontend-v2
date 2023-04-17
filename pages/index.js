@@ -2,9 +2,7 @@ import Head from "next/head"
 import Header from "../components/Header"
 import Feed from "../components/Feed"
 import Modal from "../components/Modal"
-import { app } from "../firebase/config"
-import { getAuth } from "firebase/auth"
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/router"
 
 export default function Home() {

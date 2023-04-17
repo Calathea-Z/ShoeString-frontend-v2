@@ -1,4 +1,5 @@
 import { initializeApp, getApp, getApps } from "firebase/app"
+import { getAuth } from "firebase/auth"
 
 const config = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -8,4 +9,6 @@ const config = {
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
 }
 
-export const app = !getApps().length ? initializeApp(config) : getApp()
+const app = !getApps().length ? initializeApp(config) : getApp()
+const auth = getAuth(app)
+export { auth, app }

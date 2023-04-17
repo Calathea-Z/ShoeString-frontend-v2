@@ -1,15 +1,13 @@
 import React from "react"
-import Header from "../components/Header"
 import Image from "next/image"
 import FullLogo from "../assets/full_logo.png"
-import { app } from "../firebase/config"
+import { auth } from "../firebase/config"
 import { useRouter } from "next/router"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth"
+import { GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth"
 
 const Register = () => {
-    const auth = getAuth(app)
     const googleProvider = new GoogleAuthProvider()
     const router = useRouter()
     const [email, setEmail] = useState("")
@@ -21,6 +19,7 @@ const Register = () => {
             const res = await createUserWithEmailAndPassword(auth, email, password)
             console.log(res.user)
             sessionStorage.setItem("token", res.user.accessToken)
+            router.push("/")
         } catch (err) {
             console.error(err)
             if (err.code === "auth/email-already-in-use") {
