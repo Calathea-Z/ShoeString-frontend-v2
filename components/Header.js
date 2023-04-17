@@ -12,16 +12,14 @@ import { useRecoilState } from "recoil"
 import { modalState } from "../atoms/modalAtom"
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { getAuth } from "firebase/auth"
+import { auth } from "../firebase/config"
 import { useRouter } from "next/router"
 
 function Header({ children }) {
-    const auth = getAuth()
     const router = useRouter()
     const [open, setOpen] = useRecoilState(modalState)
     const [userEmail, setUserEmail] = useState("")
     useEffect(() => {
-        const auth = getAuth()
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 console.log("Logged in as:", user.email)
@@ -53,7 +51,7 @@ function Header({ children }) {
             <div className="flex justify-between max-w-6xl mx-5 lg:mx-auto">
                 <div className="relative hidden lg:inline-grid w-24 cursor-pointer">
                     <Link href="/">
-                        <Image src={FullLogo} alt="Shoestring full logo" className="cursor-pointer" fill style={{ objectFit: "contain", width: "100%" }} />
+                        <Image src={FullLogo} alt="Shoestring full logo" className="cursor-pointer" fill sizes="(max-width: 768px)" style={{ objectFit: "contain", width: "100%" }} />
                     </Link>
                 </div>
                 {/* Logo for Larger Screens */}
@@ -76,6 +74,8 @@ function Header({ children }) {
 
                 {/* -----------HeaderRight*/}
                 <div className="flex items-center justify-end space-x-4">
+                    {/* display if there is a user logged in */}
+                    {/* needs to be styled */}
                     {userEmail ? (
                         <div className="flex">
                             <button onClick={logout} className=" text-white bg-purple-500 hover:bg-purple-500/80 font-medium rounded-lg text-sm px-5 py-3 mr-2 mb-2">
